@@ -1,0 +1,1 @@
+sudo python /home/pi/rpi_ws281x-master/python/qs1812.py

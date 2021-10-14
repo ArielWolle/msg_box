@@ -1,0 +1,1 @@
+sudo python /home/pi/rpi_ws281x-master/python/clear.py -c
