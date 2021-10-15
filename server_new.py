@@ -4,8 +4,8 @@ import os
 import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
 
 
-box="Ariel_Box"
-otherBox="Emily_Box"
+otherBox="Ariel_Box"
+box="Emily_Box"
 
 GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BCM) # Use physical pin numbering
