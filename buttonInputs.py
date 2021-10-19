@@ -2,17 +2,19 @@ import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
 import paho.mqtt.publish as publish
 import time
 
-currentTime=time.time()
-lastTime=time.time()-5
+timeDifference=3
 
-otherBox="Ariel_Box"
+currentTime=time.time()
+lastTime=time.time()-timeDifference
+
+otherBox="Emily_Box"
 broker_address="173.230.138.220" 
 
 GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BCM) # Use physical pin numbering
 
-button1=17
-button2=27
+button1=27
+button2=17
 button3=22
 
 GPIO.setup(button1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -25,7 +27,7 @@ pressed_3=False
 
 while True:
     currentTime=time.time()
-    if lastTime+5 < currentTime:
+    if lastTime+timeDifference < currentTime:
         if GPIO.input(button1) and not pressed_1:
             lastTime=currentTime
             pressed_1=True
