@@ -1,13 +1,24 @@
 import RPi.GPIO as GPIO # Import Raspberry Pi GPIO library
 import paho.mqtt.publish as publish
 import time
+import os
+
+names=["ariel","emily"]
+
+box=os.uname().nodename
+if names[0] in box:
+    otherBox=names[1]+"box"
+else:
+    otherBox=names[0]+"box"
+
+print(box, " ", otherBox)
+
 
 timeDifference=3
 
 currentTime=time.time()
 lastTime=time.time()-timeDifference
 
-otherBox="Emily_Box"
 broker_address="173.230.138.220" 
 
 GPIO.setwarnings(False) # Ignore warning for now
