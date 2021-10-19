@@ -1,7 +1,7 @@
 #!/user/bin/env python
 # -*- coding:utf-8 -*-
 import RPi.GPIO as GPIO
-from neopixel import *
+from rpi_ws281x import *
 import time
 
 #LED strip config
@@ -40,7 +40,7 @@ alph=[
 [[0,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,1],[0,0,0,0,0,1,1,1],[0,0,0,0,1,1,1,0],[0,0,0,1,1,1,0,0],[0,0,1,1,1,0,0,0],[0,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,1]],
 [[0,0,0,0,0,0,0,0],[0,1,1,0,0,1,1,0],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,0],[0,0,1,1,1,1,0,0],[0,0,0,1,1,0,0,0]]]
 #object neo create
-strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS)
+strip = PixelStrip(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS)
 #int lib
 strip.begin()
 strip.show()
