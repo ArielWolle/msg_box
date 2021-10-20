@@ -1,4 +1,4 @@
-#!/user/bin/env python
+#!/user/	in/env python
 # -*- coding:utf-8 -*-
 import RPi.GPIO as GPIO
 from rpi_ws281x import *
