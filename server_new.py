@@ -7,16 +7,16 @@ from rpi_ws281x import *
 import board
 import busio
 import adafruit_drv2605
-from  adafruit_drv2605 import *
-from threading import Thread
 
-names=["ariel","emily"]
+names=["Ariel","Emily"]
 
 box=os.uname().nodename
 if names[0] in box:
-    otherBox=names[1]+"box"
+    otherBox=names[1]+"_Box"
+    box=names[0]+"_Box"
 else:
-    otherBox=names[0]+"box"
+    otherBox=names[0]+"_Box"
+    box=names[1]+"_Box"
 
 print(box, " ", otherBox)
 
