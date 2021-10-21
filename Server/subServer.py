@@ -5,11 +5,11 @@ from uploadSentance import *
 
 prior_time=""
 
-def subServer(broker_address,Box):
+def subServer(broker_address,Box,topicName):
 
     def on_connect(client, userdata, flags, rc):  # The callback for when the client connects to the broker
         print("Connected with result code {0}".format(str(rc)))  # Print result of connection attempt
-        client.subscribe("msg_box/"+Box)
+        client.subscribe(topicName+"/"+Box)
 
     def on_message(client, userdata, msg):  # The callback for when a PUBLISH message is received from the server.
         global prior_time

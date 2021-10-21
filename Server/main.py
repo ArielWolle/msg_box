@@ -12,6 +12,7 @@ broker_address="173.230.138.220"
 
 #Find Box names for topics
 Box,otherBox=find_names()
+topicName="msg_box"
 
 #Set time limit (in ms) between button presses on pubServer
 timeDifference=1
@@ -23,8 +24,8 @@ button3=22
 
 #sub server threading 
 
-sub=Thread(target=subServer, args=(broker_address,Box))
-pub=Thread(target=pubServer, args=(broker_address,otherBox,timeDifference,button1,button2,button3))
+sub=Thread(target=subServer, args=(broker_address,Box,topicName))
+pub=Thread(target=pubServer, args=(broker_address,otherBox,topicName,timeDifference,button1,button2,button3))
 pub.start()
 sub.start()
 
