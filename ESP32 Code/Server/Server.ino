@@ -6,6 +6,7 @@
 */
 #include <Adafruit_NeoPixel.h>
 #include <RunningMedian.h>
+#include <EEPROM.h>
 #include "EspMQTTClient.h"
 
 
@@ -41,13 +42,57 @@ int maxButton4Data = 0;
 int button4Value = 0;
 
 
-EspMQTTClient client(
+
+#define CONFIG_START 32        // position in EEPROM where our first byte gets written
+#define CONFIG_VERSION "00001" // version string to let us compare current to whatever is in EEPROM
+
+
+EspMQTTClient client;
+
+typedef struct {
+  char version[6];      // Version of the configuration in EEPROM, used in case we change the struct
+  uint8_t debug;        // Debug on yes/no 1/0
+  char nodename[32];    // this node name
+  char ssid[32];        // WiFi SSID
+  char password[64];    // WiFi Password
+  char mqttip[32];      // Mosquitto server IP
+  uint16_t mqttport;    // Mosquitto port
+  char mqttuser[32];    // Mosquitto Username (if needed, or "")
+  char mqttpass[64];    // Moqsuitto Password (if needed, or "")
+} configuration_t;
+
+configuration_t CONFIGURATION = {
+  CONFIG_VERSION,
+  1,
+  "TestClient",
   "oogie",
   "15277251TAD",
-  "173.230.138.220",  // MQTT Broker server ip
-  "TestClient",     // Client name that uniquely identify your device
-  1883              // The MQTT port, default to 1883. this line can be omitted
-);
+  "173.230.138.220",
+  1883,
+  "",
+  ""
+};
+
+
+
+int loadConfig() {
+  // validate its the correct version (and therefore the same struct...)
+  if (EEPROM.read(CONFIG_START + 0) == CONFIG_VERSION[0] &&
+      EEPROM.read(CONFIG_START + 1) == CONFIG_VERSION[1] &&
+      EEPROM.read(CONFIG_START + 2) == CONFIG_VERSION[2] &&
+      EEPROM.read(CONFIG_START + 3) == CONFIG_VERSION[3] &&
+      EEPROM.read(CONFIG_START + 4) == CONFIG_VERSION[4]) {
+    // and if so read configuration into struct
+    EEPROM.get(CONFIG_START, CONFIGURATION);
+    return 1;
+  }
+  return 0;
+}
+
+void saveConfig() {
+  EEPROM.put(CONFIG_START, CONFIGURATION);
+  EEPROM.commit();
+}
 
 void button1AddData() {
   button1Data.add(touchRead(button1Pin)); ;
@@ -143,6 +188,18 @@ void buttonChecks() {
 void setup()
 {
   Serial.begin(115200);
+  EEPROM.begin(sizeof(configuration_t) + CONFIG_START);
+  if (!loadConfig()) {
+    saveConfig();
+  }
+  // enable debug messages if our configuration tells us to
+  if (CONFIGURATION.debug)
+    client.enableDebuggingMessages();
+
+  client.setWifiCredentials(CONFIGURATION.ssid, CONFIGURATION.password);
+  client.setMqttClientName(CONFIGURATION.nodename);
+  client.setMqttServer(CONFIGURATION.mqttip, CONFIGURATION.mqttuser, CONFIGURATION.mqttpass, CONFIGURATION.mqttport);
+  EEPROM.end();
   xTaskCreatePinnedToCore(
       buttonSetter, /* Function to implement the task */
       "Buttonset", /* Name of the task */
@@ -155,7 +212,6 @@ void setup()
   strip.setBrightness(20);
   strip.show(); // Initialize all pixels to 'off'
   // Optionnal functionnalities of EspMQTTClient :
-  client.enableDebuggingMessages(); // Enable debugging messages sent to serial output
   client.enableHTTPWebUpdater(); // Enable the web updater. User and password default to values of MQTTUsername and MQTTPassword. These can be overrited with enableHTTPWebUpdater("user", "password").
   client.enableLastWillMessage("TestClient/lastwill", "I am going offline");  // You can activate the retain flag by setting the third parameter to true
 }
