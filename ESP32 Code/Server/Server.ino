@@ -44,7 +44,7 @@ int button4Value = 0;
 
 
 #define CONFIG_START 32        // position in EEPROM where our first byte gets written
-#define CONFIG_VERSION "00001" // version string to let us compare current to whatever is in EEPROM
+#define CONFIG_VERSION "00002" // version string to let us compare current to whatever is in EEPROM
 
 
 EspMQTTClient client;
@@ -65,8 +65,8 @@ configuration_t CONFIGURATION = {
   CONFIG_VERSION,
   1,
   "TestClient",
-  "oogie",
-  "15277251TAD",
+  "BELL583",
+  "71D3FEC214C3",
   "173.230.138.220",
   1883,
   "",
